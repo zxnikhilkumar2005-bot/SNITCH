@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hook/useAuth.js';
+import { useNavigate } from 'react-router';
 
 const Register = ({ toggleView }) => {
     const { handleRegister } = useAuth();
+    const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
     
     const [formData, setFormData] = useState({
@@ -30,6 +32,7 @@ const Register = ({ toggleView }) => {
             fullname: formData.fullName,
             isSeller: formData.isSeller
         });
+        navigate('/')
     };
 
     return (

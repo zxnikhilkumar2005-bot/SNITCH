@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../hook/useAuth.js';
 
 const Login = ({ toggleView }) => {
+    const { handleLogin } = useAuth();
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: '',
         rememberMe: false,
     });
@@ -16,6 +21,14 @@ const Login = ({ toggleView }) => {
         }));
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const success = await handleLogin({ email: formData.email, password: formData.password });
+        if (success) {
+            navigate("/");
+        }
+    };
+
     return (
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 sm:p-10 w-full">
             <div className="text-center mb-8">
@@ -23,7 +36,7 @@ const Login = ({ toggleView }) => {
                 <p className="text-white/80 text-sm">Welcome back. Please log in to your account.</p>
             </div>
 
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -33,11 +46,11 @@ const Login = ({ toggleView }) => {
                             </svg>
                         </div>
                         <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleInputChange}
-                            placeholder="Username"
+                            placeholder="Enter your email"
                             className="w-full pl-11 pr-4 py-3.5 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
                         />
                     </div>
