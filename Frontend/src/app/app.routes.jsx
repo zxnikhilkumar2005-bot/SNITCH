@@ -1,5 +1,5 @@
-import { createBrowserRouter } from "react-router";
-import Register from "../features/auth/pages/Register";
+import { createBrowserRouter, Navigate } from "react-router";
+import AuthPage from "../features/auth/pages/AuthPage";
 
 
 export const router = createBrowserRouter([
@@ -8,7 +8,11 @@ export const router = createBrowserRouter([
         element: <h1>hello world</h1>
     },
     {
+        path: "/auth",
+        element: <AuthPage />
+    },
+    {
         path: "/register",
-        element: <Register />
+        element: <Navigate to="/auth" replace />
     }
 ])

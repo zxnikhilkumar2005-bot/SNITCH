@@ -1,8 +1,8 @@
-import userMOdel from "../models/user.model.js";
+import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
 
-async function sendTokenResponse(user,res,massage) {
+async function sendTokenResponse(user, res, message) {
     const token = jwt.sign({ 
         id: user._id,
 
@@ -12,7 +12,7 @@ async function sendTokenResponse(user,res,massage) {
     res.cookie ("token", token)
 
     res.status(200).json({
-        massage,
+        message,
         success: true,
         user: {
             id: user._id,
@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
     const { email, contact, password, fullName, isSeller } = req.body;
 
     try {
-        const existingUser = await userMOdel.findOne({
+        const existingUser = await userModel.findOne({
             $or: [
                 { email },
                 { contact }
@@ -39,7 +39,7 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ message: "User with this email or contact already exists" });
         }
 
-        const newUser = new userMOdel({
+        const newUser = new userModel({
             email,
             contact,
             password,
@@ -47,7 +47,8 @@ export const registerUser = async (req, res) => {
             role: isSeller ? "seller" : "buyer"
         });
 
-        await sendTokenResponse(user, res, "User registered successfully")
+        const savedUser = await newUser.save();
+        await sendTokenResponse(savedUser, res, "User registered successfully")
 
     } catch (error) {
         console.log(error)
