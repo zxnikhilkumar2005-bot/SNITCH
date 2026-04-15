@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hook/useAuth.js';
 import { useNavigate } from 'react-router';
-
+import GoogleAuthButton from '../components/GoogleAuthButton';
 const Register = ({ toggleView }) => {
     const { handleRegister } = useAuth();
     const navigate = useNavigate()
@@ -142,6 +142,16 @@ const Register = ({ toggleView }) => {
                 >
                     Create Account
                 </button>
+
+                <div className="mt-6 flex items-center justify-between">
+                    <span className="border-b border-white/20 w-1/4"></span>
+                    <span className="text-xs text-center text-white/50 uppercase">Or</span>
+                    <span className="border-b border-white/20 w-1/4"></span>
+                </div>
+
+                <div className="mt-6">
+                    <GoogleAuthButton actionText="Continue with Google" />
+                </div>
 
                 <p className="text-center text-white/80 text-sm mt-6">
                     Already have an account?{' '}

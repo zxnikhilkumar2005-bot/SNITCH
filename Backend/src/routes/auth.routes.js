@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateRegisterUser, validateLoginUser } from "../validator/auth.validator.js";
-import { loginUser, registerUser } from "../controllers/auth.controller.js";
+import { googleCallback, loginUser, registerUser } from "../controllers/auth.controller.js";
 import passport from "passport";
 
 
@@ -13,6 +13,6 @@ router.post('/login',validateLoginUser,loginUser );
 
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-router.get("/google/callback", passport.authenticate("google", { session: false }), )
+router.get("/google/callback", passport.authenticate("google", { session: false }),googleCallback, )
 
 export default router;
