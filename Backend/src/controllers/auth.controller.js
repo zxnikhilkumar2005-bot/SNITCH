@@ -9,7 +9,12 @@ async function sendTokenResponse(user, res, message) {
     },config.JWT_SECRET,{
         expiresIn: "7d"
     })
-    res.cookie ("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: config.NODE_ENV === "production",
+        path: "/",
+    })
 
     res.status(200).json({
         message,
@@ -97,7 +102,12 @@ export const googleCallback = async (req, res) => {
     expiresIn: "7d"
    })
 
-   res.cookie("token", token)
+    res.cookie("token", token, {
+     httpOnly: true,
+     sameSite: "lax",
+     secure: config.NODE_ENV === "production",
+     path: "/",
+    })
 
 
     res.redirect("http://localhost:5173/");
