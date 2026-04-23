@@ -1,7 +1,7 @@
 import express from 'express';
 import { authenticateSeller } from '../middlewares/auth.middleware.js';
 import { createProduct } from '../controllers/product.controller.js';
-import { createProductValidator } from '../validators/product.validator.js';
+import { createProductValidator } from '../validator/product.validator.js';
 import multer from 'multer';
 
 const upload = multer({
@@ -13,7 +13,7 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post("/", authenticateSeller, createProductValidator ,upload.array('image',7), createProduct);
+router.post("/", authenticateSeller, upload.array('image',7), createProductValidator, createProduct);
 
 router.use((error, req, res, next) => {
     if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {

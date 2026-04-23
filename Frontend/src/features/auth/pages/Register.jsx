@@ -2,103 +2,118 @@ import React, { useState } from 'react';
 import { useAuth } from '../hook/useAuth.js';
 import { useNavigate } from 'react-router';
 import GoogleAuthButton from '../components/GoogleAuthButton';
+
 const Register = ({ toggleView }) => {
     const { handleRegister } = useAuth();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState('');
     
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         contactNumber: '',
         password: '',
-        isSeller: false,
     });
     
     const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        const { name, value } = e.target;
+        
+        // Validation for contact number: only digits
+        if (name === 'contactNumber') {
+            const onlyDigits = value.replace(/\D/g, '');
+            if (onlyDigits.length <= 15) { // Assuming max 15 digits for international numbers
+                setFormData(prev => ({ ...prev, [name]: onlyDigits }));
+            }
+            return;
+        }
+
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+
+        if (formData.contactNumber && formData.contactNumber.length < 10) {
+            setError('Please enter a valid contact number (at least 10 digits).');
+            return;
+        }
+
         await handleRegister({
             email: formData.email,
             contact: formData.contactNumber,
             password: formData.password,
             fullname: formData.fullName,
-            isSeller: formData.isSeller
+            isSeller: false // Default to false as requested
         });
-        navigate('/')
+        navigate('/');
     };
 
     return (
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 sm:p-10 w-full max-w-[500px]">
-            <div className="text-center mb-8">
-                <h1 className="text-3xl font-semibold text-white mb-2 tracking-tight">Register</h1>
-                <p className="text-white/80 text-sm">Create an account to join us</p>
+        <div className="w-full">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Create an account</h1>
+                <p className="text-gray-500 text-sm">Start your 30-day free trial.</p>
             </div>
 
-            <form className="space-y-5" onSubmit={handleSubmit}>
-                {/* Full Name */}
+            <form className="space-y-4" onSubmit={handleSubmit}>
+                {error && <div className="p-3 bg-red-50 text-red-600 text-sm font-medium rounded-lg border border-red-200">{error}</div>}
+
                 <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name <span className="text-gray-400 font-normal">(Optional)</span></label>
                     <input
                         type="text"
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        placeholder="Full Name"
-                        required
-                        className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
+                        placeholder="John Doe"
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {/* Email */}
-                    <div>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Email Address"
-                            required
-                            className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
-                        />
-                    </div>
-                    {/* Contact Number */}
-                    <div>
-                        <input
-                            type="tel"
-                            name="contactNumber"
-                            value={formData.contactNumber}
-                            onChange={handleInputChange}
-                            placeholder="Contact Number"
-                            className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
-                        />
-                    </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="you@example.com"
+                        required
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                    />
+                </div>
+                
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number*</label>
+                    <input
+                        type="tel"
+                        name="contactNumber"
+                        value={formData.contactNumber}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 1234567890"
+                        required
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                    />
                 </div>
 
-                {/* Password Field */}
                 <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Password*</label>
                     <div className="relative">
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             value={formData.password}
                             onChange={handleInputChange}
-                            placeholder="Password"
+                            placeholder="Create a password"
                             required
-                            className="w-full px-4 pr-12 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
+                            className="w-full px-4 py-2.5 pr-12 bg-white border border-gray-200 rounded-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/60 rounded transition-colors"
-                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                         >
                             {showPassword ? (
                                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,51 +127,30 @@ const Register = ({ toggleView }) => {
                             )}
                         </button>
                     </div>
-                </div>
-
-                {/* Register as Seller */}
-                <div className={`mt-4 p-4 rounded-xl border transition-all duration-300 ${formData.isSeller ? 'bg-[#a3e635]/10 border-[#a3e635]/50' : 'bg-black/10 border-white/10'}`}>
-                    <label className="flex items-center space-x-3 cursor-pointer group w-max">
-                        <div className="relative flex items-center justify-center">
-                            <input 
-                                type="checkbox" 
-                                name="isSeller"
-                                checked={formData.isSeller}
-                                onChange={handleInputChange}
-                                className="peer sr-only" 
-                            />
-                            <div className="w-5 h-5 border border-white/40 rounded bg-white/5 peer-checked:bg-[#a3e635] peer-checked:border-[#a3e635] transition-colors shadow-sm"></div>
-                            <svg className="absolute w-3.5 h-3.5 text-[#064e3b] opacity-0 peer-checked:opacity-100 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <span className={`font-medium transition-colors ${formData.isSeller ? 'text-[#d9f99d]' : 'text-white/80 group-hover:text-white'}`}>
-                            Register as seller
-                        </span>
-                    </label>
+                    <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters.</p>
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full py-3.5 mt-4 bg-gradient-to-r from-emerald-500 to-[#a3e635] hover:from-emerald-400 hover:to-[#bef264] text-[#064e3b] font-bold tracking-wide rounded-xl shadow-[0_4px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.5)] transform transition-all active:scale-[0.98]"
+                    className="w-full py-3.5 mt-2 bg-black hover:bg-gray-800 text-white font-medium rounded-[14px] shadow-lg shadow-black/10 transition-all active:scale-[0.98]"
                 >
-                    Create Account
+                    Create account
                 </button>
 
                 <div className="mt-6 flex items-center justify-between">
-                    <span className="border-b border-white/20 w-1/4"></span>
-                    <span className="text-xs text-center text-white/50 uppercase">Or</span>
-                    <span className="border-b border-white/20 w-1/4"></span>
+                    <span className="border-b border-gray-200 w-1/4"></span>
+                    <span className="text-xs text-center text-gray-500 uppercase">Or</span>
+                    <span className="border-b border-gray-200 w-1/4"></span>
                 </div>
 
                 <div className="mt-6">
-                    <GoogleAuthButton actionText="Continue with Google" />
+                    <GoogleAuthButton actionText="Sign up with Google" />
                 </div>
 
-                <p className="text-center text-white/80 text-sm mt-6">
+                <p className="text-center text-gray-600 text-sm mt-6">
                     Already have an account?{' '}
-                    <button type="button" onClick={toggleView} className="text-[#d9f99d] hover:text-[#bef264] font-semibold transition-colors">
-                        Login
+                    <button type="button" onClick={toggleView} className="text-black font-semibold hover:underline">
+                        Log in
                     </button>
                 </p>
             </form>

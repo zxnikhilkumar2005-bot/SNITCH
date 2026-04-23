@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../hook/useAuth.js';
 import GoogleAuthButton from '../components/GoogleAuthButton';
+
 const Login = ({ toggleView }) => {
     const { handleLogin } = useAuth();
     const navigate = useNavigate();
@@ -30,53 +31,40 @@ const Login = ({ toggleView }) => {
     };
 
     return (
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 sm:p-10 w-full">
-            <div className="text-center mb-8">
-                <h1 className="text-3xl font-semibold text-white mb-2 tracking-tight">Login</h1>
-                <p className="text-white/80 text-sm">Welcome back. Please log in to your account.</p>
+        <div className="w-full">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Welcome back</h1>
+                <p className="text-gray-500 text-sm">Please enter your details to sign in.</p>
             </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-5" onSubmit={handleSubmit}>
                 <div>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            {/* User Icon */}
-                            <svg className="h-5 w-5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Enter your email"
-                            className="w-full pl-11 pr-4 py-3.5 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
-                        />
-                    </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Enter your email"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                    />
                 </div>
 
                 <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                     <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            {/* Lock Icon */}
-                            <svg className="h-5 w-5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
-                        </div>
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             value={formData.password}
                             onChange={handleInputChange}
-                            placeholder="Password"
-                            className="w-full pl-11 pr-12 py-3.5 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 hover:bg-black/30 transition-all font-medium"
+                            placeholder="••••••••"
+                            className="w-full px-4 py-3 pr-12 bg-white border border-gray-200 rounded-[14px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/60 rounded transition-colors"
-                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
                         >
                             {showPassword ? (
                                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,45 +82,59 @@ const Login = ({ toggleView }) => {
 
                 <div className="flex items-center justify-between text-sm">
                     <label className="flex items-center space-x-2 cursor-pointer group">
-                        <div className="relative flex items-center justify-center">
-                            <input
-                                type="checkbox"
-                                name="rememberMe"
-                                checked={formData.rememberMe}
-                                onChange={handleInputChange}
-                                className="peer sr-only"
-                            />
-                            <div className="w-4 h-4 border border-white/40 rounded bg-white/5 peer-checked:bg-[#a3e635] peer-checked:border-[#a3e635] transition-colors shadow-sm"></div>
-                            <svg className="absolute w-3 h-3 text-[#064e3b] opacity-0 peer-checked:opacity-100 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <span className="text-white/80 group-hover:text-white transition-colors">Remember me</span>
+                        <input
+                            type="checkbox"
+                            name="rememberMe"
+                            checked={formData.rememberMe}
+                            onChange={handleInputChange}
+                            className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
+                        />
+                        <span className="text-gray-600 group-hover:text-gray-900 transition-colors">Remember for 30 days</span>
                     </label>
-                    <button type="button" className="text-[#d9f99d] hover:text-[#bef264] transition-colors font-medium">Forgot password?</button>
+                    <button type="button" className="text-gray-900 font-semibold hover:underline">Forgot password?</button>
                 </div>
 
                 <button
                     type="submit"
-                    className="w-full py-3.5 mt-2 bg-gradient-to-r from-emerald-500 to-[#a3e635] hover:from-emerald-400 hover:to-[#bef264] text-[#064e3b] font-bold tracking-wide rounded-xl shadow-[0_4px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.5)] transform transition-all active:scale-[0.98]"
+                    className="w-full py-3.5 bg-black hover:bg-gray-800 text-white font-medium rounded-[14px] shadow-lg shadow-black/10 transition-all active:scale-[0.98]"
                 >
-                    Login
+                    Sign in
                 </button>
 
-                <div className="mt-6 flex items-center justify-between">
-                    <span className="border-b border-white/20 w-1/4"></span>
-                    <span className="text-xs text-center text-white/50 uppercase">Or</span>
-                    <span className="border-b border-white/20 w-1/4"></span>
-                </div>
-
                 <div className="mt-6">
-                    <GoogleAuthButton actionText="Continue with Google" />
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
                 </div>
 
-                <p className="text-center text-white/80 text-sm mt-6">
+                <div className="mt-6 space-y-3">
+                    <GoogleAuthButton actionText="Google" />
+                    
+                    <div className="flex gap-3">
+                        <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-[14px] hover:bg-gray-50 transition-colors">
+                            <svg className="w-5 h-5 text-black" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z" />
+                            </svg>
+                            <span className="font-medium text-gray-700">Apple</span>
+                        </button>
+                        <button type="button" className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-[14px] hover:bg-gray-50 transition-colors">
+                            <svg className="w-4 h-4 text-black" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                            <span className="font-medium text-gray-700">X</span>
+                        </button>
+                    </div>
+                </div>
+
+                <p className="text-center text-gray-600 text-sm mt-8">
                     Don't have an account?{' '}
-                    <button type="button" onClick={toggleView} className="text-[#d9f99d] hover:text-[#bef264] font-semibold transition-colors">
-                        Register
+                    <button type="button" onClick={toggleView} className="text-black font-semibold hover:underline">
+                        Sign up
                     </button>
                 </p>
             </form>
